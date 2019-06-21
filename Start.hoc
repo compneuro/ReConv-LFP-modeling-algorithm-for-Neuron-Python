@@ -1,0 +1,88 @@
+// ReConv algorithm for reconstructing evoked LFP in cerebellar granular layer
+// Uses Multicompartmental GrC model (see http://senselab.med.yale.edu/ModelDb/showmodel.asp?model=116835)
+// Last updated 11-June-2011
+// Model developer: Shyam Diwakar M.
+// Developed at Amrita School of Biotechnology (India) and at Prof. Egidio D'Angelo's Lab at Univ of Pavia (Italy)
+// Amrita School of Biotechnology, Amritapuri
+// Clappana P.O., Kollam, 690 525, Kerala, India.
+// http://research.amrita.edu/compneuro
+// Email:shyam@amrita.edu
+
+ 
+/* Model published as [Diwakar et al., 2011, manuscript accepted, PLoS ONE]
+Shyam Diwakar, Paola Lombardo, Sergio Solinas, Giovanni Naldi, Egidio D'Angelo. "Local field potential modeling predicts dense activation in cerebellar granule cells clusters under LTP and LTD control", PLoS ONE, 2011.
+*/
+
+
+ 
+xopen("$(NEURONHOME)/lib/hoc/noload.hoc")
+
+
+// ***** General settings *****
+tstop=200 //default simulation stop time in ms
+v_init = -70 //init voltage
+xopen("Grc_Cell.hoc") // load Granule cell template
+objref Granule[1]  //create Granule cell
+Granule[0] = new GrC()
+	
+// ***** Synapses ****
+
+objref nclist,Mossy[4],Inhib[4],nclist2	
+objref synNS[4],synA[4],synG[4]	
+
+
+// ***** Procedures to connect synapses to dendritic tips *****
+proc con1() {
+	nclist2 = new List()
+	for(j=0;j<4;j=j+1) {
+	    //print j,k
+	    access Granule[0].dend_3[j]	
+	    Inhib[j] = new SpikeGenerator(0.5)
+            synG[j] = new GRC_GABA(0.5)
+            nclist2.append(new NetCon(Inhib[j], synG[j], -20, 0.000, 1e-3))
+        }
+}
+proc con2() { 
+	nclist = new List()
+       	for(k3=0;k3<4;k3=k3+1) {
+		access Granule[0].dend_4[k3]
+        	Mossy[k3] = new SpikeGenerator(0.5)
+		synA[k3] = new AmpaCOD(0.5)
+		synNS[k3] = new NMDAS(0.5)
+	        nclist.append(new NetCon(Mossy[k3], synNS[k3],-20, 0.000, 1e-3))
+	        nclist.append(new NetCon(Mossy[k3], synA[k3],-20, 0.000, 1e-3))
+        }
+}
+
+	con1()
+	con2()
+
+
+// ***** Start GUI *****
+
+load_proc("nrnmainmenu")
+nrnmainmenu()
+
+xopen("ComPanel.hoc") //Command Panel
+
+
+// ***** Initialization *****
+
+finitialize(v_init)
+
+proc usetable(){
+	usetable_GRC_NA  = 	$1
+	usetable_GRC_NAR = 	$1
+	usetable_GRC_PNA = 	$1
+	usetable_GRC_KV  = 	$1
+	usetable_GRC_KA  =  	$1
+	usetable_GRC_KIR = 	$1
+	usetable_GRC_KM  = 	$1
+	usetable_GRC_CA  = 	$1
+}
+
+
+xopen("Parametri.hoc")//"Channels and Controls Panel"
+xopen("Record_vext.hoc")
+
+

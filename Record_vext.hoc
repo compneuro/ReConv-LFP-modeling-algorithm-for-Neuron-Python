@@ -1,0 +1,592 @@
+// ReConv algorithm for reconstructing evoked LFP in cerebellar granular layer
+// Uses Multicompartmental GrC model (see http://senselab.med.yale.edu/ModelDb/showmodel.asp?model=116835)
+// Last updated 11-June-2011
+// Model developer: Shyam Diwakar M.
+// Developed at Amrita School of Biotechnology (India) and at Prof. Egidio D'Angelo's Lab at Univ of Pavia (Italy)
+// Amrita School of Biotechnology, Amritapuri
+// Clappana P.O., Kollam, 690 525, Kerala, India.
+// http://research.amrita.edu/compneuro
+// Email:shyam@amrita.edu
+
+
+/* Model published as [Diwakar et al., 2011, manuscript accepted, PLoS ONE]
+Shyam Diwakar, Paola Lombardo, Sergio Solinas, Giovanni Naldi, Egidio D'Angelo. "Local field potential modeling predicts dense activation in cerebellar granule cells clusters under LTP and LTD control", PLoS ONE, 2011.
+*/
+
+//Modifying gmax
+
+	for(i=0;i<4;i=i+1) {
+		GrC[0].synA[i].gmax=600
+		GrC[0].synNS[i].gmax=100000
+		GrC[0].synG[i].gmax=2500
+
+	}
+
+
+//Measuring and plotting total vext[0] from extracellular electrode
+//Last updated  15-September-2008
+
+objref ivec,isubvec,isubvec2,isubvec3,isubvec4,isubvec5,isubvec6,isubvec7,isubvec8,isubvec9,isubvec10,isubvec11,g,CC
+objref isubvec12,isubvec13,isubvec14,isubvec15,isubvec16,isubvec17,isubvec18,isubvec19,isubvec20,isubvec21,isubvec22
+objref isubvec23,isubvec24,isubvec25,isubvec26,isubvec27,isubvec28,isubvec29,isubvec30,isubvec31,isubvec32,isubvec33
+objref isubvec34,isubvec35,isubvec36,isubvec37,isubvec38,isubvec39,isubvec40,isubvec41,isubvec42,isubvec43
+objref isubvec44,isubvec45,isubvec46,isubvec47,isubvec48,isubvec49,isubvec50,isubvec51,isubvec52,iveca,time
+
+objref fob
+fob = new File()
+strdef s
+
+
+forall {
+	insert extracellular
+	xg[0]=100e3//100e3.3
+	xraxial[0]=100e-3//1e-3.4
+
+}
+
+
+time = new Vector()
+ivec = new Vector()
+isubvec = new Vector()
+isubvec2 = new Vector()
+isubvec3 = new Vector()
+isubvec4 = new Vector()
+isubvec5 = new Vector()
+isubvec6 = new Vector()
+isubvec7 = new Vector()
+isubvec8 = new Vector()
+isubvec9 = new Vector()
+isubvec10 = new Vector()
+isubvec11 = new Vector()
+isubvec12 = new Vector()
+isubvec13 = new Vector()
+isubvec14 = new Vector()
+isubvec15 = new Vector()
+isubvec16 = new Vector()
+isubvec17 = new Vector()
+isubvec18 = new Vector()
+isubvec19 = new Vector()
+isubvec20 = new Vector()
+isubvec21 = new Vector()
+isubvec22 = new Vector()
+isubvec23 = new Vector()
+isubvec24 = new Vector()
+isubvec25 = new Vector()
+isubvec26 = new Vector()
+isubvec27 = new Vector()
+isubvec28 = new Vector()
+isubvec29 = new Vector()
+isubvec30 = new Vector()
+isubvec31 = new Vector()
+isubvec32 = new Vector()
+isubvec33 = new Vector()
+isubvec34 = new Vector()
+isubvec35 = new Vector()
+isubvec36 = new Vector()
+isubvec37 = new Vector()
+isubvec38 = new Vector()
+isubvec39 = new Vector()
+isubvec40 = new Vector()
+isubvec41 = new Vector()
+isubvec42 = new Vector()
+isubvec43 = new Vector()
+isubvec44 = new Vector()
+isubvec45 = new Vector()
+isubvec46 = new Vector()
+isubvec47 = new Vector()
+isubvec48 = new Vector()
+isubvec49 = new Vector()
+isubvec50 = new Vector()
+isubvec51 = new Vector()
+isubvec52 = new Vector()
+
+iveca = new Vector() //summed val
+
+
+
+proc extpl1() {
+	time.record(&t)
+  GrC[0].soma isubvec.record(&GrC[0].soma.vext[0])
+  GrC[0].dend_4[3] isubvec2.record(&GrC[0].dend_4[3].vext[0])
+  GrC[0].dend_4[2] isubvec3.record(&GrC[0].dend_4[2].vext[0])
+  GrC[0].dend_4[1] isubvec4.record(&GrC[0].dend_4[1].vext[0])
+  GrC[0].dend_4[0] isubvec5.record(&GrC[0].dend_4[0].vext[0])
+  GrC[0].dend_3[3] isubvec6.record(&GrC[0].dend_3[3].vext[0])
+  GrC[0].dend_3[2] isubvec7.record(&GrC[0].dend_3[2].vext[0])
+  GrC[0].dend_3[1] isubvec8.record(&GrC[0].dend_3[1].vext[0])
+  GrC[0].dend_3[0] isubvec9.record(&GrC[0].dend_3[0].vext[0])
+  GrC[0].dend_2[3] isubvec10.record(&GrC[0].dend_2[3].vext[0])
+  GrC[0].dend_2[2] isubvec11.record(&GrC[0].dend_2[2].vext[0])
+  GrC[0].dend_2[1] isubvec12.record(&GrC[0].dend_2[1].vext[0])
+
+}
+
+proc extpl2() {
+  GrC[0].dend_2[0] isubvec13.record(&GrC[0].dend_2[0].vext[0])
+  GrC[0].dend_1[3] isubvec14.record(&GrC[0].dend_1[3].vext[0])
+  GrC[0].dend_1[2] isubvec15.record(&GrC[0].dend_1[2].vext[0])
+  GrC[0].dend_1[1] isubvec16.record(&GrC[0].dend_1[1].vext[0])
+  GrC[0].dend_1[0] isubvec17.record(&GrC[0].dend_1[0].vext[0])
+  GrC[0].hillock[0] isubvec18.record(&GrC[0].hillock[0].vext[0])
+  GrC[0].hillock[1] isubvec19.record(&GrC[0].hillock[1].vext[0])
+  GrC[0].hillock[2] isubvec20.record(&GrC[0].hillock[2].vext[0])
+  GrC[0].hillock[3] isubvec21.record(&GrC[0].hillock[3].vext[0])
+  GrC[0].hillock[4] isubvec22.record(&GrC[0].hillock[4].vext[0])
+  GrC[0].axon[0] isubvec23.record(&GrC[0].axon[0].vext[0])
+  GrC[0].axon[1] isubvec24.record(&GrC[0].axon[1].vext[0])
+  GrC[0].axon[2] isubvec25.record(&GrC[0].axon[2].vext[0])
+  GrC[0].axon[3] isubvec26.record(&GrC[0].axon[3].vext[0])
+}
+
+proc extpl3() {
+  GrC[0].axon[4] isubvec27.record(&GrC[0].axon[4].vext[0])
+  GrC[0].axon[5] isubvec28.record(&GrC[0].axon[5].vext[0])
+  GrC[0].axon[6] isubvec29.record(&GrC[0].axon[6].vext[0])
+  GrC[0].axon[7] isubvec30.record(&GrC[0].axon[7].vext[0])
+  GrC[0].axon[8] isubvec31.record(&GrC[0].axon[8].vext[0])
+  GrC[0].axon[9] isubvec32.record(&GrC[0].axon[9].vext[0])
+  GrC[0].axon[10] isubvec33.record(&GrC[0].axon[10].vext[0])
+  GrC[0].axon[11] isubvec34.record(&GrC[0].axon[11].vext[0])
+  GrC[0].axon[12] isubvec35.record(&GrC[0].axon[12].vext[0])
+  GrC[0].axon[13] isubvec36.record(&GrC[0].axon[13].vext[0])
+  GrC[0].axon[14] isubvec37.record(&GrC[0].axon[14].vext[0])
+  GrC[0].axon[15] isubvec38.record(&GrC[0].axon[15].vext[0])
+
+}
+
+proc extpl4() {
+  GrC[0].axon[16] isubvec39.record(&GrC[0].axon[16].vext[0])
+  GrC[0].axon[17] isubvec40.record(&GrC[0].axon[17].vext[0])
+  GrC[0].axon[18] isubvec41.record(&GrC[0].axon[18].vext[0])
+  GrC[0].axon[19] isubvec42.record(&GrC[0].axon[19].vext[0])
+  GrC[0].axon[20] isubvec43.record(&GrC[0].axon[20].vext[0])
+  GrC[0].axon[21] isubvec44.record(&GrC[0].axon[21].vext[0])
+  GrC[0].axon[22] isubvec45.record(&GrC[0].axon[22].vext[0])
+  GrC[0].axon[23] isubvec46.record(&GrC[0].axon[23].vext[0])
+  GrC[0].axon[24] isubvec47.record(&GrC[0].axon[24].vext[0])
+  GrC[0].axon[25] isubvec48.record(&GrC[0].axon[25].vext[0])
+  GrC[0].axon[26] isubvec49.record(&GrC[0].axon[26].vext[0])
+  GrC[0].axon[27] isubvec50.record(&GrC[0].axon[27].vext[0])
+  GrC[0].axon[28] isubvec51.record(&GrC[0].axon[28].vext[0])
+  GrC[0].axon[29] isubvec52.record(&GrC[0].axon[29].vext[0])
+}
+
+proc sum1() {
+	iveca = isubvec.sub(isubvec3)
+	iveca = iveca.sub(isubvec2)
+	iveca = iveca.sub(isubvec3)
+	iveca = iveca.sub(isubvec4)
+	iveca = iveca.sub(isubvec5)
+	iveca = iveca.sub(isubvec6)
+	iveca = iveca.sub(isubvec7)
+	iveca = iveca.sub(isubvec8)
+	iveca = iveca.sub(isubvec9)
+	iveca = iveca.sub(isubvec10)
+	iveca = iveca.sub(isubvec11)
+	iveca = iveca.sub(isubvec12)
+}
+proc sum2() {
+	iveca = iveca.sub(isubvec13)
+	iveca = iveca.sub(isubvec14)
+	iveca = iveca.sub(isubvec15)
+	iveca = iveca.sub(isubvec16)
+	iveca = iveca.sub(isubvec17)
+	iveca = iveca.add(isubvec18)
+
+
+}
+proc sum3() {
+//	iveca = iveca.add(isubvec19)
+//	iveca = iveca.add(isubvec20)
+//	iveca = iveca.add(isubvec21)
+//	iveca = iveca.add(isubvec22)
+	//iveca = iveca.add(isubvec23)
+	//iveca = iveca.add(isubvec24)
+	//iveca = iveca.add(isubvec25)
+	//iveca = iveca.add(isubvec26)
+        iveca = iveca.add(isubvec27)
+	iveca = iveca.add(isubvec28)
+	iveca = iveca.add(isubvec29)
+	iveca = iveca.add(isubvec30)
+	iveca = iveca.add(isubvec31)
+	iveca = iveca.add(isubvec32)
+	iveca = iveca.add(isubvec33)
+	iveca = iveca.add(isubvec34)
+	iveca = iveca.add(isubvec35)
+	iveca = iveca.add(isubvec36)
+	iveca = iveca.add(isubvec37)
+	iveca = iveca.add(isubvec38)
+}
+
+proc sum4() {
+	iveca = iveca.add(isubvec39)
+	iveca = iveca.add(isubvec40)
+	iveca = iveca.add(isubvec41)
+	iveca = iveca.add(isubvec42)
+	iveca = iveca.add(isubvec43)
+	iveca = iveca.add(isubvec44)
+	iveca = iveca.add(isubvec45)
+	iveca = iveca.add(isubvec46)
+	iveca = iveca.add(isubvec47)
+	iveca = iveca.add(isubvec48)
+	iveca = iveca.add(isubvec49)
+	iveca = iveca.add(isubvec50)
+	iveca = iveca.add(isubvec51)
+	iveca = iveca.add(isubvec52)
+}
+
+
+
+proc rresize(){
+
+time.resize(0)
+iveca.resize(0)
+ivec.resize(0)
+isubvec.resize(0)
+isubvec2.resize(0)
+isubvec3.resize(0)
+isubvec4.resize(0)
+isubvec5.resize(0)
+isubvec6.resize(0)
+isubvec7.resize(0)
+isubvec8.resize(0)
+isubvec9.resize(0)
+isubvec10.resize(0)
+isubvec11.resize(0)
+isubvec12.resize(0)
+isubvec13.resize(0)
+isubvec14.resize(0)
+isubvec15.resize(0)
+isubvec16.resize(0)
+isubvec17.resize(0)
+isubvec18.resize(0)
+isubvec19.resize(0)
+isubvec20.resize(0)
+isubvec21.resize(0)
+isubvec22.resize(0)
+isubvec23.resize(0)
+isubvec24.resize(0)
+isubvec25.resize(0)
+isubvec26.resize(0)
+isubvec27.resize(0)
+isubvec28.resize(0)
+isubvec29.resize(0)
+isubvec30.resize(0)
+isubvec31.resize(0)
+isubvec32.resize(0)
+isubvec33.resize(0)
+isubvec34.resize(0)
+isubvec35.resize(0)
+isubvec36.resize(0)
+isubvec37.resize(0)
+isubvec38.resize(0)
+isubvec39.resize(0)
+isubvec40.resize(0)
+isubvec41.resize(0)
+isubvec42.resize(0)
+isubvec43.resize(0)
+isubvec44.resize(0)
+isubvec45.resize(0)
+isubvec46.resize(0)
+isubvec47.resize(0)
+isubvec48.resize(0)
+isubvec49.resize(0)
+isubvec50.resize(0)
+isubvec51.resize(0)
+isubvec52.resize(0)
+
+}
+
+
+proc write_files(){
+
+									// Invitro
+if(type == 1){
+	sprint(s,"data/Invitro/e%di%d.asc",Exe_comb_num,Inh_comb_num)
+	fob.wopen(s)
+
+				for i=1,iveca.size()-1 { 			// writing
+					fob.printf("%f \t %e", time.x[i],iveca.x[i])
+					fob.printf("\n")
+				}
+	fob.close()
+}
+
+if(type == 2){
+	sprint(s,"data/Invitro/e%dmfnorm.asc",Exe_comb_num)
+	fob.wopen(s)
+
+				for i=1,iveca.size()-1 { 			// writing
+					fob.printf("%f \t %e", time.x[i],iveca.x[i])
+					fob.printf("\n")
+				}
+	fob.close()
+}
+
+if(type == 3){
+	sprint(s,"data/Invitro/e%dmfnonmda.asc",Exe_comb_num)
+	fob.wopen(s)
+
+				for i=1,iveca.size()-1 { 			// writing
+					fob.printf("%f \t %e", time.x[i],iveca.x[i])
+					fob.printf("\n")
+				}
+	fob.close()
+}
+
+
+										//Invivo
+
+
+if(type == 4){
+	sprint(s,"data/Invivo/t%dmfnorm.asc",Exe_comb_num)
+	fob.wopen(s)
+
+				for i=1,iveca.size()-1 { 			// writing
+					fob.printf("%f \t %e", time.x[i],iveca.x[i])
+					fob.printf("\n")
+				}
+	fob.close()
+}
+
+if(type == 5){
+	sprint(s,"data/Invivo/c%dmfnorm.asc",Exe_comb_num)
+	fob.wopen(s)
+
+				for i=1,iveca.size()-1 { 			// writing
+					fob.printf("%f \t %e", time.x[i],iveca.x[i])
+					fob.printf("\n")
+				}
+	fob.close()
+}
+
+
+}
+
+
+
+
+ proc run_combinations() {
+
+	rresize()	 // resizing the vectors
+	MossyInhib()  // updating mosyy and Inh
+
+
+	extpl1() //Somato-dendritic LFP - comment lines for axonal data
+	extpl2() //Somato-dendritic LFP - comment lines for axonal data
+//	extpl3()  //uncomment for axonal data
+//	extpl4() //uncomment for axonal data
+	init()
+	continuerun(tstop)
+	sum1()  //Somato-dendritic LFP - comment lines for axonal data
+	sum2()  //Somato-dendritic LFP - comment lines for axonal data
+//	sum3() //uncomment for axonal data
+//	sum4()  //uncomment for axonal data
+
+write_files()
+}
+
+
+
+proc MossyInhib(){
+
+	for i= 0, 3{
+			Mossy[i].end=0
+			Inhib[i].end=0
+	}
+
+	if(type == 1){								//e#i#
+		for i= 0, Exe_comb_num-1{
+				Mossy[i].fast_invl=10
+				Mossy[i].slow_invl=1e05
+				Mossy[i].burst_len=1
+				Mossy[i].start=20
+				Mossy[i].end=1e10
+
+		}
+
+		for i= 0, Inh_comb_num-1{
+				Inhib[i].fast_invl=10
+				Inhib[i].slow_invl=1e05
+				Inhib[i].burst_len=1
+				Inhib[i].start=24
+				Inhib[i].end=1e10
+
+		}
+	}
+
+
+	if(type == 2){								//e#mfnorm
+	for i= 0, Exe_comb_num-1{
+			Mossy[i].fast_invl=10
+			Mossy[i].slow_invl=1e05
+			Mossy[i].burst_len=1
+			Mossy[i].start=20
+			Mossy[i].end=1e10
+
+	}
+
+	for i= 0, 3{
+			Inhib[i].end=0
+	}
+	}
+
+
+	if(type == 3){								//e%dmfnonmda
+	for i= 0, Exe_comb_num-1{
+			Mossy[i].fast_invl=10
+			Mossy[i].slow_invl=1e05
+			Mossy[i].burst_len=1
+			Mossy[i].start=20
+			Mossy[i].end=1e10
+
+			for nm=0,7{
+			NMDAS[nm].gmax=0
+		}
+	}
+
+	for i= 0, 3{
+			Inhib[i].end=0
+	}
+	}
+
+
+}
+
+	 // Invivo ----------------------------------------------------------------------->
+
+proc trigerminal(){
+	tstop = 200
+	exe_start = 20
+	spike_length = 5
+	Inhbi_start = 24
+	MossyInhib_Invivo()
+}
+
+
+proc cortical(){
+	tstop = 200
+	exe_start = 60
+	spike_length = 9
+	Inhbi_start = 64
+	MossyInhib_Invivo()
+}
+
+
+proc MossyInhib_Invivo(){
+
+	for i= 0, 3 {
+			Mossy[i].end=0
+			Inhib[i].end=0
+	}
+
+
+	for i= 0, Exe_comb_num-1{
+			Mossy[i].fast_invl= 2
+			Mossy[i].slow_invl= 1e05
+			Mossy[i].burst_len = spike_length
+			Mossy[i].start = exe_start
+			Mossy[i].end = 1e10
+
+	}
+
+	for i= 0, Inh_comb_num-1{
+			Inhib[i].fast_invl = 2
+			Inhib[i].slow_invl = 1e05
+			Inhib[i].burst_len = 1
+			Inhib[i].start = Inhbi_start
+			Inhib[i].end = 1e10
+
+	}
+
+}
+
+
+
+proc run_combinations_Invivo() {
+
+	extpl1()
+	extpl2()
+	init()
+	trigerminal()
+	run(tstop)
+	sum1()
+	sum2()
+	write_files()
+	rresize()	 // resizing the vector
+
+	extpl1()
+	extpl2()
+	init()
+	cortical()
+	run(tstop)
+	sum1()
+	sum2()
+	type = 5
+	write_files()
+	rresize()	 // resizing the vector
+}
+
+
+
+proc Invitro_runn(){
+	type = $3
+	Exe_comb_num = $1
+	Inh_comb_num = $2
+	run_combinations()
+}
+
+proc Invivo_runn(){
+	type = $3
+	Exe_comb_num = $1
+	Inh_comb_num = $2
+	run_combinations_Invivo()
+}
+
+
+proc Invitro(){
+	print "Simulating in vitro traces... "
+							//e#i#
+	Invitro_runn(1,1,1)		//Exe,Inh,type
+	Invitro_runn(2,2,1)
+	Invitro_runn(3,3,1)
+	Invitro_runn(4,4,1)
+
+							//e#mfnorm
+	Invitro_runn(1,0,2)
+	Invitro_runn(2,0,2)
+	Invitro_runn(3,0,2)
+	Invitro_runn(4,0,2)
+
+							//e%dmfnonmda
+	Invitro_runn(1,0,3)
+	Invitro_runn(2,0,3)
+	Invitro_runn(3,0,3)
+	Invitro_runn(4,0,3)
+}
+
+
+
+proc Invivo(){
+	print "Simulating in vivo traces ... "
+	Invivo_runn(4,1,4)		//Exe,Inh,type
+	Invivo_runn(3,2,4)
+	Invivo_runn(2,3,4)
+	Invivo_runn(1,4,4)
+}
+
+//Invivo()
+//Invitro()
+
+// panel
+/*
+xpanel("Control Panel")
+	xlabel("ReConv Algorithm")
+	xlabel("================")
+	xlabel("Run control")
+	xbutton("In vitro","Invitro()")
+	xbutton("In vivo","Invivo()")
+	xlabel("Reconstructing evoked LFP in cerebellar granular layer")
+	xlabel("Ref. Diwakar et al., PLoS ONE, 2011.")
+xpanel()
+*/
